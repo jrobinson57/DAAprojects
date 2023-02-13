@@ -1,6 +1,7 @@
 package bruteforce;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -10,7 +11,7 @@ public class Main
 {
 
     String inputData;
-    ArrayList<Integer> array = new ArrayList<Integer>();
+    ArrayList<String> array = new ArrayList<String>();
 
     public static void main(String[] args)
     {
@@ -30,15 +31,25 @@ public class Main
         try
         {
             BufferedReader reader = new BufferedReader(new FileReader(filepath));
-            String line;
-            while((reader.ready()))
+            Scanner s = new Scanner(new File(filepath));
+            boolean searching = true;
+
+            while(s.hasNext() && searching)
             {
-                for(int i = 0; i < 1; i++)
+                if(s.next().equals("0"))
                 {
-                    array.add(reader.read());
+                    searching = false;
+                    return;
                 }
+                else
+                {
+                    array.add(s.next());
+                }
+
             }
-            System.out.println(array);
+            s.close();
+            checkIfArraySatisfies(array);
+
         }
         catch(IOException e)
         {
@@ -70,5 +81,17 @@ public class Main
     public void parseInput(String inputData)
     {
         //while()
+    }
+
+    public void checkIfArraySatisfies(ArrayList<String> array)
+    {
+        System.out.println("Checking " + array + " for satisfying assignment");
+        //print every value at each index in initial arrayList
+        for(int i = 0; i < array.size(); i++)
+        {
+            System.out.println(array.get(i));
+        }
+        //if satisfiable, print the satisfying formula
+        //if unsatisfiable, check the next line from the input file
     }
 }
