@@ -11,7 +11,8 @@ public class Main
 {
 
     String inputData;
-    ArrayList<String> array = new ArrayList<String>();
+    ArrayList<Integer> array = new ArrayList<Integer>();
+    ArrayList<Integer> combinedArray = new ArrayList<Integer>();
 
     public static void main(String[] args)
     {
@@ -21,6 +22,7 @@ public class Main
 
         System.out.println("Enter the filepath of the input.");
         filepath = sc.nextLine();
+        sc.close();
         m.readInput(filepath);
     }
 
@@ -30,26 +32,27 @@ public class Main
     {
         try
         {
-            BufferedReader reader = new BufferedReader(new FileReader(filepath));
             Scanner s = new Scanner(new File(filepath));
-            boolean searching = true;
 
-            while(s.hasNext() && searching)
+            while(s.hasNext())
             {
-                if(s.next().equals("0"))
+                if(s.hasNextInt())
                 {
-                    searching = false;
-                    return;
+                    array.add(s.nextInt());
                 }
                 else
                 {
-                    array.add(s.next());
+                    s.next();
                 }
-
             }
             s.close();
-            checkIfArraySatisfies(array);
-
+            //gets rid of the first row of the input file, which shouldn't be part of the main data
+            for(int i = 0; i < 4; i++)
+            {
+                array.remove(0);
+            }
+            System.out.println(array);
+            splitIntoSmallerArray(array);
         }
         catch(IOException e)
         {
@@ -58,39 +61,52 @@ public class Main
         }
     }
 
-    //prints file input
-    //@string filepath - source of input file
-    public void printInput(String filepath)
+    ArrayList<Integer> smallArray = new ArrayList<Integer>();
+    public void splitIntoSmallerArray(ArrayList<Integer> array)
     {
-        try
+        boolean addingToArray = true;
+        while(addingToArray)
         {
-            BufferedReader reader = new BufferedReader(new FileReader(filepath));
-            String line;
-            while((line = reader.readLine()) != null)
+            for(int i = 0; i < array.size(); i++)
             {
-                System.out.println();
+                if(array.get(i) == 0)
+                {
+                    addingToArray = false;
+                    //return;
+                }
+                else if(addingToArray)
+                {
+                    smallArray.add(array.get(i));
+                }
+                else
+                {
+                    //do nothing
+                }
             }
         }
-        catch(IOException e)
+        System.out.println("Created Sub-Array of size: " + smallArray.size());
+        for(int i = 0; i < smallArray.size(); i++)
         {
-            System.out.println("Wrong input");
-            e.printStackTrace();
+            System.out.println(smallArray.get(i));
+        }
+        combineTheArrays(smallArray);
+        System.out.println(combinedArray);
+        //checkIfArraySatisfies(smallArray);
+    }
+
+    public void combineTheArrays(ArrayList<Integer> smallArray)
+    {
+        for(int i = 0; i < smallArray.size(); i++)
+        {
+            System.out.println("Added " + smallArray.get(i) + " to the combined array");
+            combinedArray.add(smallArray.get(i));
         }
     }
 
-    public void parseInput(String inputData)
-    {
-        //while()
-    }
-
-    public void checkIfArraySatisfies(ArrayList<String> array)
+    public void checkIfArraySatisfies(ArrayList<Integer> array)
     {
         System.out.println("Checking " + array + " for satisfying assignment");
-        //print every value at each index in initial arrayList
-        for(int i = 0; i < array.size(); i++)
-        {
-            System.out.println(array.get(i));
-        }
+
         //if satisfiable, print the satisfying formula
         //if unsatisfiable, check the next line from the input file
     }
